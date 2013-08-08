@@ -1,5 +1,5 @@
 function Cal126(){
-    _self = this;
+    var _self = this;
 
     _self.month = function(){ return _self.working_date.getMonth(); };
     _self.day = function(){   return _self.working_date.getDate(); };
@@ -46,9 +46,9 @@ function Cal126(){
     };
 
     _self.split_by_weeks = function(){
-        // Split int array into weeks, 
-        var days = cal.get_month_len()
-        var offset = cal.get_month_offset();
+        // Split int array into weeks,
+        var days = _self.get_month_len()
+        var offset = _self.get_month_offset();
 
         var week = [];
         var month = [];
