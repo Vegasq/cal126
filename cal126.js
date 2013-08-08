@@ -47,8 +47,8 @@ function Cal126(){
 
     _self.split_by_weeks = function(){
         // Split int array into weeks, 
-        var days = cal.get_month_len()
-        var offset = cal.get_month_offset();
+        var days = _self.get_month_len()
+        var offset = _self.get_month_offset();
 
         var week = [];
         var month = [];
