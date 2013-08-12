@@ -1,3 +1,6 @@
+/**
+ * @constructor
+ */
 function Cal126(date){
     var _self = this;
 
@@ -92,7 +95,9 @@ function Cal126(date){
     };
 }
 
-
+/**
+ * @constructor
+ */
 var Cal126UI = function(settings){
     var _self = this;    
 
@@ -126,7 +131,7 @@ var Cal126UI = function(settings){
         _self.range = settings['range'];
 
         // Define events for day ckick and month change
-        document.body.addEventListener('click', _self.global_handler);
+        document.body.addEventListener('click', _self.global_handler, false);
 
         _self.draw();
     };
@@ -261,7 +266,7 @@ var Cal126UI = function(settings){
                 _self.daylist.push(next);
             }
 
-            var next = _self.date_helper.change_date(next, 1);
+            next = _self.date_helper.change_date(next, 1);
         }
         
     };
@@ -338,9 +343,7 @@ var Cal126UI = function(settings){
         return _self.template
             .replace(/%id%/g, _self.id)
             .replace(/%year%/g, _self.cal.get_month_name() + " " + _self.cal.year() )
-            .replace(/%calendar%/g, cal)
-            .replace(/%from%/g, _self.from)
-            .replace(/%to%/g, _self.to);
+            .replace(/%calendar%/g, cal);
     };
 
     _self.draw = function(){
@@ -348,7 +351,9 @@ var Cal126UI = function(settings){
         list_container.innerHTML = _self.build();
     };
 
-
+    /**
+     * @constructor
+     */
     var DateHelper = function(){
         var _self = this;
 
