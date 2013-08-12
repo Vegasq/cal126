@@ -1,6 +1,8 @@
 cal126
 ======
 
+Test it http://jsfiddle.net/ZLhBa/ !
+
 Yet another JavaScript calendar.
 
 ### UI
