@@ -1,7 +1,7 @@
 cal126
 ======
 
-Test it http://jsfiddle.net/ZLhBa/ !
+Test it http://jsfiddle.net/vegasq/ZLhBa/3/ !
 
 Yet another JavaScript calendar.
 
