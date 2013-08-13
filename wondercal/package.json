@@ -7,10 +7,16 @@
   "window": {
   	"title": "Wonder Calendar",
     "frame": false,
+    // "as_desktop": true,
     "icon": "icon.png",
     "toolbar": false,
     "frame": false,
     "width": 970,
-    "height": 850
+    "height": 850,
+    "min_width": 970,
+    "min_height": 850,
+    "max_width": 970,
+    "max_height": 850
+
   }
 }
