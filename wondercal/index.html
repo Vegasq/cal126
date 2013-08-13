@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cal126 demo</title>
+
+    <script src="cal126.js"  type='application/javascript'></script>
+
+	<style type="text/css">
+	body, html { padding:0; margin:0; }
+	body * { 
+		
+	    -webkit-user-select: none;
+	  
+	}
+	.wuc_styled_block { 
+		width: 200px; height: 240px; 
+		border: 1px solid #e0e0e0; 
+		float:left;
+		margin:15px;
+		margin-top: 5px;
+	}
+	table {
+		border-spacing: 0px;
+	}
+
+	.calendar_container > table { margin: 0 auto;  }
+
+
+	.day_name {
+		padding:2px 4px;
+		text-align: center;
+
+	}
+	tr > td.cal_day{
+		border-right: 1px solid #e0e0e0;
+		border-bottom: 1px solid #e0e0e0;
+		padding:2px 4px;
+		text-align: center;
+		cursor:pointer;
+	}
+
+	tr > td.cal_day:last-child{
+		border-right: 0px solid #e0e0e0;
+	}
+
+
+	tr:last-child > td.cal_day{
+		border-bottom: 0px solid #e0e0e0;
+	}
+
+	.cal_day_selected {
+		background-color:#bdffbf;
+	}
+
+	.wuc_blue { background-color: #2c4aff; }
+	.wuc_orange { background-color: #ff860f; }
+	.wuc_blue2 { background-color: #00a2ff; }
+	.wuc_purple { background-color: #b900d5; }
+	.wuc_red { background-color: #e73600; }
+	.wuc_red2 { background-color: #911e42; }
+	.wuc_green { background-color: #27cd00; }
+	.wuc_pink { background-color: #ff1fd2; }
+	.wuc_darkblue { background-color: #1500b1; }
+	.wuc_puse { background-color: #cc8899; }
+	.wuc_vk { background-color: #4d7198; }
+	.wuc_red3 { background-color: #e32636; }
+
+
+	.wuc_styled_block_title { 
+		
+		width: 150px;
+		height: 31px;
+		margin-top: 10px;
+		margin-bottom: 10px;
+		color: white;
+		line-height: 30px;
+		padding-left: 10px;
+		font-family: Verdana, Arial, Helvetica, sans-serif;
+		font-family: 'Times New Roman', Times, serif;
+		font-family: Geneva, Arial, Helvetica, sans-serif;
+		margin-left: -5px;
+		box-shadow: -2px 1px 15px gray;
+	}
+	.wuc_styled_block_title_tringle { 
+		background-color: inherit;
+		width: 22px;
+		height: 21px;
+		-moz-transform: rotate(45deg);
+		-ms-transform: rotate(45deg);
+		-webkit-transform: rotate(45deg);
+		-o-transform: rotate(45deg);
+		transform: rotate(45deg);
+		float: right;
+		margin-top: 5px;
+		margin-right: -11px;
+	}
+
+	#close {
+		position:absolute;
+		top:0;
+		width: 70px;
+		text-align: center;
+		border:1px solid #e0e0e0;
+		border-top: 0px;
+		margin-left:10px;
+		background-color: #ffbcbc;
+		cursor:pointer;
+	}
+	#close:hover {
+		background-color: #FF3668;
+	}
+
+	#year {
+		position:absolute;
+		top:0;
+		right:10px;
+
+	}
+	#year { font-size: 2em; font-weight: bold; }
+	#year > #next, #year > #prev { cursor:pointer; color: lightgray; padding:10px;}
+	#year > #next:hover, #year > #prev:hover { color: gray; }
+
+	#dragme {
+		-webkit-app-region: drag;
+		margin-left:100px;
+		height:40px;
+		cursor:move;
+		width:600px;
+	}
+	#months { padding: 0 13px; }
+	.today { background-color: #ff4e00; color: white; }
+	</style>
+</head>
+<body>
+
+	<div id='dragme'>
+    &nbsp;
+    </div>
+    <div id='close' onclick='window.close()'>&nbsp;</div>
+
+    <div id='year'>
+    	<span id='prev'>2012</span>
+    	<span id='cur'>2013</span>
+    	<span id='next'>2014</span>
+    </div>
+
+
+
+    <div id='months'>
+
+
+	<div class='wuc_styled_block'>
+		<div class='wuc_styled_block_title wuc_red'>
+			January<div class='wuc_styled_block_title_tringle'></div>
+		</div>
+		<div id='month_0'></div>
+	</div>
+
+	<div class='wuc_styled_block'>
+		<div class='wuc_styled_block_title wuc_purple'>
+			February<div class='wuc_styled_block_title_tringle'></div>			
+		</div>
+		<div id='month_1'></div>
+	</div>
+		
+	<div class='wuc_styled_block'>
+		<div class='wuc_styled_block_title wuc_blue2'>
+			Marth<div class='wuc_styled_block_title_tringle'></div>			
+		</div>
+		<div id='month_2'></div>
+	</div>
+		
+	<div class='wuc_styled_block'>
+		<div class='wuc_styled_block_title wuc_pink'>
+			April<div class='wuc_styled_block_title_tringle'></div>
+		</div>
+		<div id='month_3'></div>
+	</div>
+
+	<div class='wuc_styled_block'>
+		<div class='wuc_styled_block_title wuc_darkblue'>
+			May<div class='wuc_styled_block_title_tringle'></div>
+		</div>
+		<div id='month_4'></div>
+	</div>
+
+	<div class='wuc_styled_block'>
+		<div class='wuc_styled_block_title wuc_red2'>
+			June<div class='wuc_styled_block_title_tringle'></div>
+		</div>
+		<div id='month_5'></div>
+	</div>
+
+	<div class='wuc_styled_block'>
+		<div class='wuc_styled_block_title wuc_puse'>
+			July<div class='wuc_styled_block_title_tringle'></div>
+		</div>
+		<div id='month_6'></div>
+	</div>
+
+	<div class='wuc_styled_block'>
+		<div class='wuc_styled_block_title wuc_vk'>
+			August<div class='wuc_styled_block_title_tringle'></div>
+		</div>
+		<div id='month_7'></div>
+	</div>
+
+	<div class='wuc_styled_block'>
+		<div class='wuc_styled_block_title wuc_red3'>
+			September<div class='wuc_styled_block_title_tringle'></div>
+		</div>
+		<div id='month_8'></div>
+	</div>
+
+	<div class='wuc_styled_block'>
+		<div class='wuc_styled_block_title wuc_green'>
+			October<div class='wuc_styled_block_title_tringle'></div>			
+		</div>
+		<div id='month_9'></div>
+	</div>		
+	<div class='wuc_styled_block'>
+		<div class='wuc_styled_block_title wuc_orange'>
+			November<div class='wuc_styled_block_title_tringle'></div>			
+		</div>
+		<div id='month_10'></div>
+	</div>		
+	<div class='wuc_styled_block'>
+		<div class='wuc_styled_block_title wuc_blue'>
+			December<div class='wuc_styled_block_title_tringle'></div>			
+		</div>
+		<div id='month_11'></div>
+	</div>
+
+    </div>
+
+    <script type='application/javascript'>
+    var init = function(year){
+	    var i = 0;
+	    while(i < 12){
+	        var cal = new Cal126UI({
+	            'name': '', 
+	            'date': new Date(year,i,1), 
+	            'parent':'month_' + i,
+	            'callback': function(dates){  },
+	            'range': false
+	        });
+
+	    	i += 1;
+	    }    	
+    }
+    var d = new Date();
+    init(d.getFullYear());
+
+    var next = function(){
+    	var year = parseInt(document.getElementById('cur').innerHTML, 10);
+    	init(year + 1);
+    	document.getElementById('cur').innerHTML = year + 1;
+    	document.getElementById('prev').innerHTML = year;
+    	document.getElementById('next').innerHTML = year + 2;
+    };
+    var prev = function(){
+    	var year = parseInt(document.getElementById('cur').innerHTML, 10);
+    	init(year - 1);
+    	document.getElementById('cur').innerHTML = year - 1;
+    	document.getElementById('prev').innerHTML = year - 2;
+    	document.getElementById('next').innerHTML = year;
+    };
+
+    document.getElementById('next').addEventListener('click', next, false);
+    document.getElementById('prev').addEventListener('click', prev, false);
+
+
+    </script>
+</body>
+</html>
