@@ -18,11 +18,21 @@ function Cal126(date){
         return month_names[_self.month()];
     };
 
-    _self.get_month_offset = function(){
+    _self.get_month_offset = function(moday_first){
         // Offset for first week
+        if(moday_first === undefined){
+            moday_first = false;
+        }
+
         var month = _self.month() + 1;
         var date = new Date(month + ' 1 ,' + _self.year());
-        return date.getDay();
+
+
+        if(moday_first){
+ 	        return date.getDay() - 1;
+        } else {
+ 	        return date.getDay();    	
+        }
     };
 
     _self.get_month_len = function(){
@@ -55,7 +65,7 @@ function Cal126(date){
     _self.split_by_weeks = function(){
         // Split int array into weeks,
         var days = _self.get_month_len()
-        var offset = _self.get_month_offset();
+        var offset = _self.get_month_offset(true);
 
         var week = [];
         var month = [];
