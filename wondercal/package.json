@@ -11,11 +11,11 @@
     "icon": "icon.png",
     "toolbar": false,
     "frame": false,
-    "width": 970,
+    "width": 980,
     "height": 850,
-    "min_width": 970,
+    "min_width": 980,
     "min_height": 850,
-    "max_width": 970,
+    "max_width": 980,
     "max_height": 850
 
   }
