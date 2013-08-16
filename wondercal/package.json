@@ -1,15 +1,14 @@
 {
   "name": "WonderCalendar",
   "description": "Calendar APP",
-   "keywords": [ "calendar", "cal" ],
+  "keywords": [ "calendar", "cal" ],
   "version": "0.1.0",
   "main": "index.html",
   "window": {
-  	"title": "Wonder Calendar",
+    "title": "Wonder Calendar",
     "frame": false,
-    // "as_desktop": true,
     "icon": "icon.png",
-    "toolbar": false,
+    "toolbar": true,
     "frame": false,
     "width": 970,
     "height": 850,
@@ -17,6 +16,5 @@
     "min_height": 850,
     "max_width": 970,
     "max_height": 850
-
   }
 }
