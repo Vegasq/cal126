@@ -8,7 +8,7 @@
     "title": "Wonder Calendar",
     "frame": false,
     "icon": "icon.png",
-    "toolbar": true,
+    "toolbar": false,
     "frame": false,
     "width": 980,
     "height": 850,

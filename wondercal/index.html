@@ -149,9 +149,64 @@
 		width:600px;
 	}
 	#months { padding: 0 13px; }
-	.today { background-color: #ff4e00; color: white; }
+	.today { color: #ff4e00; font-weight: bold; }
 
+	#sidebar {
+		width: 350px;
+		position:absolute;
+	    height: auto;
+	    min-height: 100%;
+	    border-right:1px solid lightgray;
+	    background-color: white;
+	    top:0;
+	    left:0;
+	    font-size:1.2em;
+	    display:none;
+	}
+	#sidebar .settings_element {
+		width: 100%;
+		border-bottom: 1px solid #e8e8e8;
+		height:20px;
+		padding: 20px 0;
+	}
+	#sidebar label {
+		float:left;
+		text-transform: uppercase;
+		width: 100px;
+		padding-left: 20px;
+	}
+	#sidebar .val {
+		height: 30px;
+		line-height: 30px;
+		border: 1px solid lightgray;
+		float:right;
+		text-align: center;
+		margin:5px;
+		padding: 0 10px;
+		margin-top:-5px;
+	}
+	#sidebar .val:hover {
+		background-color: #00ccff;
+		cursor:pointer;
+	}
+	.switches {
+		padding-right:20px;
+	}
+	#settings_icon {
+		position:absolute;
+		bottom:0;
+		left:0;
+		z-index: 10;
+		font-size: 2em;
+		padding-left: 5px;
+		color: lightgray;
+		cursor:pointer;
+	}
+	#settings_icon:hover { color: gray; }
 
+	.selected_setting {
+		background-color: #00ccff;
+	}
 	</style>
 </head>
 <body>
@@ -164,7 +219,7 @@
     <div id='close' onclick='window.close()'>&nbsp;</div>
     <!-- <div id='minim' onclick='var win = gui.Window.get();win.minimize();'>&nbsp;</div> -->
 
-    <div id='settings_icon' onclick='settings_toggle()'>&#9881;</div>
+    <div id='settings_icon' >&#9881;</div>
 
     <div id='year'>
     	<span id='prev'>2012</span>
@@ -261,64 +316,6 @@
 
     </div>
 
-<style type="text/css">
-	#sidebar {
-		width: 350px;
-		position:absolute;
-	    height: auto;
-	    min-height: 100%;
-	    border-right:1px solid lightgray;
-	    background-color: white;
-	    top:0;
-	    left:0;
-	    font-size:1.2em;
-	    display:none;
-	}
-	#sidebar .settings_element {
-		width: 100%;
-		border-bottom: 1px solid #e8e8e8;
-		height:20px;
-		padding: 20px 0;
-	}
-	#sidebar label {
-		float:left;
-		text-transform: uppercase;
-		width: 100px;
-		padding-left: 20px;
-	}
-	#sidebar .val {
-		height: 30px;
-		line-height: 30px;
-		border: 1px solid lightgray;
-		float:right;
-		text-align: center;
-		margin:5px;
-		padding: 0 10px;
-		margin-top:-5px;
-	}
-	#sidebar .val:hover {
-		background-color: #00ccff;
-		cursor:pointer;
-	}
-	.switches {
-		padding-right:20px;
-	}
-	#settings_icon {
-		position:absolute;
-		bottom:0;
-		left:0;
-		z-index: 10;
-		font-size: 2em;
-		padding-left: 5px;
-		color: lightgray;
-		cursor:pointer;
-	}
-	#settings_icon:hover { color: gray; }
-
-	.selected_setting {
-		background-color: #00ccff;
-	}
-</style>
 
 <div id='sidebar'>
 	<div class='settings_element'>
@@ -330,67 +327,23 @@
 	<div class='settings_element'>
 		<label>Lines</label>
 		<div class='switches'>
-			<div id='sw1' onclick='settings_lines(1)' class='val'>1</div>
-			<div id='sw2' onclick='settings_lines(2)' class='val'>2</div>
-			<div id='sw3' onclick='settings_lines(3)' class='val'>3</div>
-			<div id='sw4' onclick='settings_lines(4)' class='val'>4</div>
+			<div id='sw2' class='val sw_handle'>2</div>
+			<div id='sw3' class='val sw_handle'>3</div>
 		</div>
 	</div>
 	<div class='settings_element'>
 		<label>First day</label>
 		<div class='switches'>
-			<div id='fd1' onclick='settings_firstday(1)' class='val'>Mon</div>
-			<div id='fd2' onclick='settings_firstday(2)' class='val'>Sat</div>
+			<div id='fd1' data-day='1' class='val fd_handle'>Mon</div>
+			<div id='fd2' data-day='2' class='val fd_handle'>Sat</div>
 		</div>
 	</div>
 </div>
 
 
-    <script type='application/javascript'>
+<script type='application/javascript'>
     var settings = new Settings();
-
-    var settings_toggle = function(){
-    	var sb = document.getElementById('sidebar');
-    	if(sb.style.display == 'block'){
-    		sb.style.display = 'none';
-    	} else {
-    		sb.style.display = 'block';
-    	}
-    };
-    var settings_lines = function(i){
-    	console.log('sss', i);
-    	settings.set('lines', i);
-	    settings.get('lines', function(data){ 
-	    	console.log('done', nline);
-	    	var nline = parseInt(data, 10); 
-	    	console.log('done', nline);
-	    	if(nline <= 0 || nline > 4){
-	    		nline = 3;
-	    	}
-	    	document.getElementById('sw'+nline).className += " selected_setting ";
-	    });
-
-    };
-    var settings_firstday = function(i){
-    	console.log('ddd');
-    	settings.set('first_day', i);
-    };
-
-    settings.get('lines', function(data){ 
-    	var nline = parseInt(data, 10); 
-    	if(nline <= 0 || nline > 4){
-    		nline = 3;
-    	}
-    	document.getElementById('sw'+nline).className += " selected_setting ";
-    });
-
-    settings.get('first_day', function(data){ 
-    	var nline = parseInt(data, 10); 
-    	if(nline <= 0 || nline > 2){
-    		nline = 1;
-    	}
-    	document.getElementById('fd'+nline).className += " selected_setting ";
-    });
+    settings.init();
 
     var init = function(year){
 	    var i = 0;
@@ -400,7 +353,8 @@
 	            'date': new Date(year,i,1), 
 	            'parent':'month_' + i,
 	            'callback': function(dates){  },
-	            'range': false
+	            'range': false,
+	            'monday_first': settings.is_monday_first()
 	        });
 
 	    	i += 1;
@@ -424,8 +378,22 @@
     	document.getElementById('next').innerHTML = year;
     };
 
+
+
     document.getElementById('next').addEventListener('click', next, false);
     document.getElementById('prev').addEventListener('click', prev, false);
+    document.getElementById('settings_icon').addEventListener('click', settings.settings_toggle, false);
+
+    var lines_button = document.querySelectorAll('.sw_handle');
+    for (var i = lines_button.length - 1; i >= 0; i--) {
+    	lines_button[i].addEventListener('click', settings.settings_lines, false);
+    };
+
+    var firstday_button = document.querySelectorAll('.fd_handle');
+    for (var i = firstday_button.length - 1; i >= 0; i--) {
+    	firstday_button[i].addEventListener('click', settings.settings_firstday, false);
+    };
+
 
 
     </script>

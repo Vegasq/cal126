@@ -11,18 +11,28 @@ function Cal126(date){
     _self.month = function(){ return _self.working_date.getMonth(); };
     _self.day = function(){   return _self.working_date.getDate(); };
     _self.year = function(){  return _self.working_date.getFullYear(); };
-    _self.cal = function(){ return _self.split_by_weeks(); }
+    _self.cal = function(monday_first){ return _self.split_by_weeks(monday_first); }
 
     _self.get_month_name = function(){
         var month_names = ["Jan","Feb","March","April","May","June","July","Aug","Sept","Oct","Nov", "Dec"];
         return month_names[_self.month()];
     };
 
-    _self.get_month_offset = function(){
+    _self.get_month_offset = function(moday_first){
         // Offset for first week
+        if(moday_first === undefined){
+            moday_first = false;
+        }
+
         var month = _self.month() + 1;
         var date = new Date(month + ' 1 ,' + _self.year());
-        return date.getDay();
+
+
+        if(moday_first){
+            return date.getDay() - 1;
+        } else {
+            return date.getDay();       
+        }
     };
 
     _self.get_month_len = function(){
@@ -52,10 +62,10 @@ function Cal126(date){
         }
     };
 
-    _self.split_by_weeks = function(){
+    _self.split_by_weeks = function(monday_first){
         // Split int array into weeks,
         var days = _self.get_month_len()
-        var offset = _self.get_month_offset();
+        var offset = _self.get_month_offset(monday_first);
 
         var week = [];
         var month = [];
@@ -105,10 +115,13 @@ var Cal126UI = function(settings){
     <div class='range_item range_item%id%' data-id='%id%'>\
         <div class='calendar_container'><table>\
         <thead>\
-        <tr><td class='day_name'>S</td><td class='day_name'>M</td><td class='day_name'>T</td><td class='day_name'>W</td><td class='day_name'>T</td><td class='day_name'>F</td><td class='day_name'>S</td></tr>\
+        %daynames%\
         </thead>\
         <tbody>%calendar%</tbody></table></div>\
     </div>";
+
+    _self.monday_first_tpl =   "<tr><td class='day_name'>M</td><td class='day_name'>T</td><td class='day_name'>W</td><td class='day_name'>T</td><td class='day_name'>F</td><td class='day_name'>S</td><td class='day_name'>S</td></tr>"
+    _self.suterday_first_tpl = "<tr><td class='day_name'>S</td><td class='day_name'>M</td><td class='day_name'>T</td><td class='day_name'>W</td><td class='day_name'>T</td><td class='day_name'>F</td><td class='day_name'>S</td></tr>"
 
     _self.id = 0;
     _self.daylist = [];
@@ -127,6 +140,7 @@ var Cal126UI = function(settings){
         _self.cal = new Cal126(settings['date']);
         _self.callback = settings['callback'];
         _self.range = settings['range'];
+        _self.monday_first = settings['monday_first'];
 
         // Define events for day ckick and month change
         document.body.addEventListener('click', _self.global_handler, false);
@@ -167,6 +181,10 @@ var Cal126UI = function(settings){
 
         if('range' in settings === false){
             settings['range'] = false;
+        }
+
+        if('monday_first' in settings === false){
+            settings['monday_first'] = false;
         }
 
         return settings;
@@ -304,13 +322,11 @@ var Cal126UI = function(settings){
     };
     
     _self.build_calendar = function(){
-        var w = _self.cal.cal(_self.cal.working_date);
+        var w = _self.cal.cal(_self.monday_first);
 
         var week_tpl = '<tr>%week%</tr>';
         var day_tpl = '<td class="cal_day %extraclass%" data-month="%month%" data-year="%year%" data-day="%day%">%day%</td>';
         var result = '';
-
-        var today = new Date();
         
         for (var i=0; i < w.length; i++) {
             var week_tmp = '';
@@ -326,11 +342,10 @@ var Cal126UI = function(settings){
                     cal_day_selected_class += ' cal_day_selected ';
                 }
 
-                var tmp = new Date(_self.cal.year(), _self.cal.month(), w[i][d]);
-                if(_self.date_helper.compare_dates(today, tmp) == true ){
+                if(_self.date_helper.compare_dates(new Date(_self.cal.year(), _self.cal.month(), w[i][d]), new Date())){
                     cal_day_selected_class += ' today ';
                 }
-                
+
                 week_tmp += day_tpl
                     .replace(/%extraclass%/g, cal_day_selected_class)
                     .replace(/%day%/g, w[i][d])
@@ -345,9 +360,17 @@ var Cal126UI = function(settings){
     _self.build = function(){
         var cal = _self.build_calendar();
 
+        if(_self.monday_first){
+            var daynames = _self.monday_first_tpl;
+        } else {
+            var daynames = _self.suterday_first_tpl;
+        }
+                                    
+
         return _self.template
             .replace(/%id%/g, _self.id)
             .replace(/%year%/g, _self.cal.get_month_name() + " " + _self.cal.year() )
+            .replace(/%daynames%/g, daynames)
             .replace(/%calendar%/g, cal);
     };
 
