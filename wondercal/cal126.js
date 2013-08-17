@@ -193,33 +193,55 @@ var Cal126UI = function(settings){
     
     _self.day_choosed = function(){
         // On day ckicked
-        _day = this;
-
-        var has = function(){
-            var classes = " " + _day.className + " ";
-            var is_here = classes.indexOf('cal_day_selected' );
-            return is_here !== -1;
-        }();
+        var _day = this;
+        var rotate = ['g', 'b', 'r'];
 
         var day = _day.getAttribute('data-day');
         var month = _day.getAttribute('data-month');
         var year = _day.getAttribute('data-year');
-        
-        var d = new Date(year, month, day);
 
-        if(has){
-            _self.remove_day(d);
-        } else {
-            _self.add_day(d);
+        if(day == ''){
+            return false;
         }
         
+        var d = new Date(year, month, day);
+        var type = false;
+        if(_self.day_exist(d)){
+            type = _self.day_type(d);
+        }
+
+        _self.remove_day(d);
+        if(type === false){
+            _self.add_day(d, 'g');
+        } else if (type === 'g'){
+            _self.add_day(d, 'b');
+        } else if (type === 'b'){
+            _self.add_day(d, 'r');
+        } else if (type === 'r'){
+            _self.remove_day(d);
+        }
+
+        _self.draw();
+        _self.save_daylist();
+    };
+
+    _self.save_daylist = function(){
+        var serialized = JSON.stringify( _self.daylist );
+        _settings.set('calendar', serialized);
+    };
+
+    _self.load_daylist = function(daylist){
+        for (var i = daylist.length - 1; i >= 0; i--) {
+            daylist[i][0] = new Date(daylist[i][0]);
+        };
+        _self.daylist = daylist;
         _self.draw();
     };
 
-    _self.add_day = function(d){
+    _self.add_day = function(d, color){
         // Search for dup
         // _self.remove_day(d);
-        _self.daylist.push(d);
+        _self.daylist.push([d, color]);
 
         if(_self.range) _self.fill_days();
 
@@ -227,7 +249,7 @@ var Cal126UI = function(settings){
     };
     _self.remove_day = function(d){
         for (var i=0; i < _self.daylist.length; i++) {
-            if( _self.date_helper.compare_dates(_self.daylist[i], d ) ){
+            if( _self.date_helper.compare_dates(_self.daylist[i][0], d ) ){
                 _self.daylist.splice(i, 1);
             }
         };
@@ -238,8 +260,16 @@ var Cal126UI = function(settings){
     
     _self.day_exist = function(d){
         for (var i=0; i < _self.daylist.length; i++) {
-            if( _self.date_helper.compare_dates(_self.daylist[i], d ) ) {
+            if( _self.date_helper.compare_dates(_self.daylist[i][0], d ) ) {
                 return true;
+            }
+        };
+        return false;
+    };
+    _self.day_type = function(d){
+        for (var i=0; i < _self.daylist.length; i++) {
+            if( _self.date_helper.compare_dates(_self.daylist[i][0], d ) ) {
+                return _self.daylist[i][1];
             }
         };
         return false;
@@ -249,8 +279,8 @@ var Cal126UI = function(settings){
         var x = 42 * 9999999999999999;
         var first = false;
         for (var i=0; i < _self.daylist.length; i++) {
-            if( _self.daylist[i].getTime() < x ) {
-                x = _self.daylist[i].getTime();
+            if( _self.daylist[i][0].getTime() < x ) {
+                x = _self.daylist[i][0].getTime();
                 first = _self.daylist[i];
             }
         };
@@ -261,8 +291,8 @@ var Cal126UI = function(settings){
         var x = 42; // 0
         var last = false;
         for (var i=0; i < _self.daylist.length; i++) {
-            if( _self.daylist[i].getTime() > x ) {
-                x = _self.daylist[i].getTime();
+            if( _self.daylist[i][0].getTime() > x ) {
+                x = _self.daylist[i][0].getTime();
                 last = _self.daylist[i];
             }
         };
@@ -279,7 +309,7 @@ var Cal126UI = function(settings){
         var next = _self.date_helper.change_date(first, 1);
         while(_self.date_helper.compare_dates(first, last) == false && next.getTime() < last.getTime()){
             if(_self.day_exist(next) == false){
-                _self.daylist.push(next);
+                _self.daylist.push([next, '']);
             }
 
             next = _self.date_helper.change_date(next, 1);
@@ -327,6 +357,21 @@ var Cal126UI = function(settings){
         var week_tpl = '<tr>%week%</tr>';
         var day_tpl = '<td class="cal_day %extraclass%" data-month="%month%" data-year="%year%" data-day="%day%">%day%</td>';
         var result = '';
+
+
+        function is_week_end(dayn){
+            var week_ends = [0, 6];
+            if(_self.monday_first){
+                week_ends = [5, 6];
+            }
+
+            for (var i = week_ends.length - 1; i >= 0; i--) {
+                if(week_ends[i] == dayn){
+                    return true;
+                }
+            };
+            return false;
+        }
         
         for (var i=0; i < w.length; i++) {
             var week_tmp = '';
@@ -335,16 +380,27 @@ var Cal126UI = function(settings){
                     w[i][d] = '';
                 }
                 
-                var cal_day_selected = _self.day_exist(new Date(_self.cal.year(), _self.cal.month(), w[i][d]));
+                var some_date = new Date(_self.cal.year(), _self.cal.month(), w[i][d]);
+                var cal_day_selected = _self.day_exist(some_date);
+                var date_type_class = '';
+                if(cal_day_selected && w[i][d]){
+                    date_type_class = ' selected_day_color_' + _self.day_type(some_date) +' ';
+                }
 
                 var cal_day_selected_class = '';
                 if(cal_day_selected && w[i][d]){
                     cal_day_selected_class += ' cal_day_selected ';
                 }
 
+                if(is_week_end(d)){
+                    cal_day_selected_class += ' weekend ';
+                }
+
                 if(_self.date_helper.compare_dates(new Date(_self.cal.year(), _self.cal.month(), w[i][d]), new Date())){
                     cal_day_selected_class += ' today ';
                 }
+
+                cal_day_selected_class += ' ' + date_type_class + ' ';
 
                 week_tmp += day_tpl
                     .replace(/%extraclass%/g, cal_day_selected_class)

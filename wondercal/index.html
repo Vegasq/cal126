@@ -53,6 +53,10 @@
 		background-color:#bdffbf;
 	}
 
+	.selected_day_color_g { background-color: #b6e122; }
+	.selected_day_color_b { background-color: #f8ff40; }
+	.selected_day_color_r { background-color: #ffc1d4; }
+
 	.wuc_blue { background-color: #2c4aff; }
 	.wuc_orange { background-color: #ff860f; }
 	.wuc_blue2 { background-color: #00a2ff; }
@@ -149,7 +153,8 @@
 		width:600px;
 	}
 	#months { padding: 0 13px; }
-	.today { color: #ff4e00; font-weight: bold; }
+	.weekend {color: #ff5a11; font-weight: bold;}
+	.today { color: #64a00f; font-weight: bold; }
 
 	#sidebar {
 		width: 350px;
@@ -335,18 +340,21 @@
 		<label>First day</label>
 		<div class='switches'>
 			<div id='fd1' data-day='1' class='val fd_handle'>Mon</div>
-			<div id='fd2' data-day='2' class='val fd_handle'>Sat</div>
+			<div id='fd2' data-day='2' class='val fd_handle'>Sun</div>
 		</div>
 	</div>
+
 </div>
 
 
 <script type='application/javascript'>
     var settings = new Settings();
     settings.init();
+    _settings = settings;
 
     var init = function(year){
 	    var i = 0;
+
 	    while(i < 12){
 	        var cal = new Cal126UI({
 	            'name': '', 
@@ -357,6 +365,12 @@
 	            'monday_first': settings.is_monday_first()
 	        });
 
+	        var calend = settings.get('calendar');
+	        if(calend === undefined){
+	        	
+	        } else {
+	        	cal.load_daylist(JSON.parse(calend));
+	        }
 	    	i += 1;
 	    }    	
     }
